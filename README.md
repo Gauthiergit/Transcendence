@@ -14,7 +14,7 @@ mkdir database
 
 4. You can execute the docker
 ````sh
-docker compose up --build
+make
 ````
 
 ## Access
