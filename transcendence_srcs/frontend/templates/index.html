@@ -1,0 +1,616 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+	<meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/Logo_page.ico' %}">
+
+    <!--Boostrp css requirement-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+    
+    <!--Police css-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/Game_css/Buttons.css' %}" rel="stylesheet">
+    <link href="{% static 'css/Game_css/Elements.css' %}" rel="stylesheet">
+    <link href="{% static 'css/Game_css/Menus.css' %}" rel="stylesheet">
+    <title>Ft_Transcendence</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark p-0 fixed-top">
+        <button class="navbar-toggler ms-2 px-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#OffcanvasNavBar" aria-controls="OffcanvasNavBar" aria-label="Toggle NavBar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <a class="navbar-brand ms-3" href="/" data-link><img src="{% static 'img/Logo_v2.png' %}" alt="logo" width="75" height="65"/></a>
+        <div class="collapse navbar-collapse" id="NavCollaspe">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0 lst_link" style="display: none;">
+                <li class="nav-item"><a class="nav-link fs-5 me-2" href="/Game/" data-link>{{ texts.Game_link }}</a></li>
+                <li class="nav-item"><a class="nav-link fs-5 me-2" href="/stats/" data-link>{{ texts.Stat_link }}</a></li>
+            </ul>
+            <div class="ms-auto dropdown">
+                <button class="btn dropdown-toggle" id="btn_lang" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ texts.Flag_nav }}" alt="lang" height="30px" width="30px"/>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-md-end pe-3" id="dropdown_lang">
+                    <li><button class="dropdown-item px-3 mx-2 btn_fr"><img src="{% static 'img/flags/fr.png' %}" alt="fr" height="50px" width="50px"/><span class="fs-4"> Français</span></button></li>
+                    <li><button class="dropdown-item px-3 mx-2 btn_en"><img src="{% static 'img/flags/en.png' %}" alt="fr" height="50px" width="50px"/><span class="fs-4">	English</span></button></li>
+                    <li><button class="dropdown-item px-3 mx-2 btn_es"><img src="{% static 'img/flags/es.png' %}" alt="fr" height="50px" width="50px"/><span class="fs-4">	Español</span></button></li>
+                </ul>
+            </div>
+        </div>
+        
+		<!-- Notifications -->
+		<div id="notif-div" style="display: none;">
+			<button class="btn btn-outline-light d-none d-md-block position-relative mx-1 notifications" type="button">💡{{ texts.Notifs_btn }}
+				<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notif_nb"><!--dynamique nbr--></span>
+			</button>
+		</div>
+		
+		<!-- options button when connected-->
+		<button class="btn btn-outline-primary me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" id="option" style="display: none;">
+			<img class="rounded-circle" id="user_avatar" src="" alt="Avatar" width="70" height="65" style="display: none;">
+            <span id="user_connected" style="display: none;"></span>
+		</button>
+
+		<!-- sign-in / login buttons -->
+		<div class="btn-group me-3 d-flex align-items-center" id="bar_sub_login" role="toolbar" aria-label="Connexion Inscription" style="display:none;">
+            <a class="btn btn-outline-light d-none d-md-block" id="signin_btn" href="/sign_in/" data-link>{{ texts.Sign_in }}</a>
+            <button class="btn btn-outline-light d-block d-md-none rounded-2" id="login_btn_small" type="button" data-bs-toggle="dropdown" aria-expanded="false" >
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="grey" class="bi bi-person" viewBox="0 0 16 16">
+                	<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+				</svg>
+            </button>
+            <button class="btn btn-light d-none d-md-block" id="login_btn_large" type="button" data-bs-toggle="dropdown" aria-expanded="false">{{ texts.Log_in }}</button>
+            <form class="dropdown-menu dropdown-menu-end p-3 log_form" id="dropdown_form">
+				{% csrf_token %}
+                <div class="mb-1">
+					<label for="Email_input" class="form-label fs-4">{{ texts.Email_1 }}</label>
+                    <input type="email" class="form-control fs-4" id="Email_input" placeholder="email@exemple.com" name="email" required>
+                </div>
+                <div class="mb-1">
+					<label for="Passwd_input" class="form-label fs-4">{{ texts.Passwd_1 }}</label>
+                    <input type="password" class="form-control fs-4" id="Passwd_input" placeholder="123merde" name="password" required>
+                </div>
+                <div class="text-center mb-1">   
+					<button type="submit" class="btn btn-primary fs-4">{{ texts.OK_btn }}</button>
+                </div>
+                <div class="text-center">   
+					<a class="btn btn-light fs-4" href="https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-74c5a74b9bae831aafaf85e15f96bdfc8fbf92c9cea3732e1a449c956a41b6ba&redirect_uri=https%3A%2F%2Ftranscendence-42.fr%2Fapi%2Flog-42%2F&response_type=code">
+						{{ texts.Log_42 }}  <img src="{% static 'img/42_Logo.svg.ico' %}" alt="logo" width="40" height="40" id="42-logo"/>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </nav>
+    
+    <!--Offcanva Menu (petit ecran)-->
+    <div class="offcanvas offcanvas-start text-white" tabindex="-1" id="OffcanvasNavBar" aria-labelledby="OffcanvasNavBarLabel">
+		<div class="offcanvas-header">
+            <h1 class="offcanvas-title fw-bolder" id="offcanvasNavbarLabel">Menu</h1>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column pt-0">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0 lst_link">
+				<li class="nav-item"><a class="nav-link fs-4 fw-bold me-2" href="/" data-bs-dismiss="offcanvas" data-link>{{ texts.Home }}</a></li>
+                <li class="nav-item"><a class="nav-link fs-5 me-2" href="/Game/" data-bs-dismiss="offcanvas" data-link>{{ texts.Game_link }}</a></li>
+                <li class="nav-item"><a class="nav-link fs-5 me-2" href="/stats/" data-bs-dismiss="offcanvas" data-link>{{ texts.Stat_link }}</a></li>
+            </ul>
+            <div class="mt-auto">
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" id="btn_lang" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ texts.Flag_nav }}" alt="lang" height="30px" width="30px"/>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-lg-end pe-3" id="dropdown_lang">
+						<li><button class="dropdown-item px-3 mx-2 btn_fr"><img src="{% static 'img/flags/fr.png' %}" alt="fr" height="50px" width="50px"/><span class="fs-4"> Français</span></button></li>
+                        <li><button class="dropdown-item px-3 mx-2 btn_en"><img src="{% static 'img/flags/en.png' %}" alt="fr" height="50px" width="50px"/><span class="fs-4">	English</span></button></li>
+                        <li><button class="dropdown-item px-3 mx-2 btn_es"><img src="{% static 'img/flags/es.png' %}" alt="fr" height="50px" width="50px"/><span class="fs-4">	Español</span></button></li>
+                    </ul>
+                </div>
+                <a href="/sign_in/" id="signin_btn_little" class="btn btn-outline-light mt-2 w-100 rounded-5" style="display: block;">{{ texts.Sign_in }}</a>
+            </div>
+			<div id="notif-div-little" style="display: none;">
+				<button class="btn btn-outline-light position-relative mx-1 w-100 notifications" type="button">💡{{ texts.Notifs_btn }}
+					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notif_nb"><!--dynamique nbr--></span>
+				</button>
+			</div>
+        </div>
+    </div>
+	
+    <div id="app" class="container">  
+		<!--Sript dynamique-->
+    </div>
+
+    <div id="empty"></div>
+
+    <footer>
+        <span>&copy; 2025 Ft_Transcendence. Tous droits réservés.</span>
+        <a href="/privacy-policy/" data-link>{{ texts.Privacy_Policy }}</a>
+    </footer>
+    
+    <!--Templates injectés par le js dans le div app-->
+    <template id="temp_index">
+		<div class="alert alert-info" id="alert_info_msg" style="display: none;">
+			<!-- msg dynamique -->
+		</div>
+		<div class="row align-items-center" id="sign_log" style="display: flex;">
+			<div class="col p-2 ">
+				<p class="fs-3 fw-bold m-0 txt-blue">{{ texts.Index_1 }}</p>
+				<p class="fs-1 fw-bolder txt-red text-center">Ft_Transcendence</p>
+        		<p class="fs-5 txt-blue">{{ texts.Index_2 }}</p>
+                <div class="btn-group btn-group-lg d-flex justify-content-center" aria-label="Connexion Inscription">
+					<a class="btn btn-dark" id="signin_btn_index" href="/sign_in/" data-link><span>{{ texts.Regis_now }}</span></a>
+                    <button class="btn btn-dark" id="login_btn_index" type="button"><span>{{ texts.Log_on }}</span></button>
+                </div>
+    		</div>
+            <div class="col p-4">
+				<img src="{% static 'anim/pong_index.gif' %}" alt="pong_index gif" class="img-fluid d-block mx-auto rounded-5 img-border img-flex">
+            </div>
+        </div>
+	</template>
+
+	<template id="temp_sign_in">
+		<h1 class="text-center fw-bold">{{ texts.Register_1 }}</h1>
+		<form class="mx-1" method="post" id="sub_form">
+			{% csrf_token %}
+			<div class="form-group my-2">
+				<label for="Email_input">{{ texts.Email_1 }}</label>
+				<input type="email" class="form-control" id="email_input" aria-describedby="emailInfo" placeholder="email@exemple.com" name="Email" required>
+				<small id="emailInfo" class="form-text text-muted">{{ texts.Email_2 }}</small>
+			</div>
+			<div class="form-group my-2">
+				<label for="username">{{ texts.Username }}</label>
+				<input type="username" class="form-control" id="username_input" placeholder="Paul" name="username" required>
+			</div>
+			<div class="form-group my-2">
+				<label for="Passwd_input">{{ texts.Passwd_1 }}</label>
+				<input type="password" class="form-control" id="passwd_input" placeholder="mDp42" name="Password1" required>
+			</div>
+			<div class="form-group my-2">
+				<label for="Passwd_input2">{{ texts.Passwd_2 }}</label>
+				<input type="password" class="form-control" id="passwd_input2" placeholder="mDp42" name="Password2" required>
+			</div>
+			<div class="text-center m-2">
+				<button type="submit" class="btn btn-primary">{{ texts.OK_btn }}</button>
+			</div>
+			<div id="err_sign_in">
+				<ul>
+					<!-- error dynamique -->
+				</ul>
+			</div>
+		</form>
+	</template>
+	
+    <template id="temp_login">
+        <div class="d-flex justify-content-center my-1"><span class="txt-blue fs-1 text-center py-1 px-2">{{ texts.Welcome }}</span><span id="username_login" class="txt-blue fs-1 text-center py-1 px-2"></span></div>
+        <div class="row d-flex align-items-center">
+            <a class="col btn btn-danger btn-red btn-lg rounded-5 m-2 fw-bolder" href="/Game/" data-link>{{ texts.Play_btn }}</a>
+            <a class="col btn btn-primary btn-blue btn-lg rounded-5 m-2 fw-bolder" href="/stats/" data-link>{{ texts.Stat_btn }}</a>
+        </div>
+        <div class="row d-flex align-items-center"><span class="txt-blue fs-2 text-center py-1">Tchat</span></div>
+        <div class="row div-grey rounded-4 mx-2 mb-2 ps-4 pe-3 py-3" id="div-tchat">
+            <div class="col-11 col-md-8 container-fluid div-white rounded-4 d-flex flex-column p-2 mx-0" id="message_container">
+				<div class="d-flex align-items-center justify-content-center flex-grow-1 px-0" id="message_lst">
+					<span class="text-center fs-2 fw-bolder txt-grey">{{ texts.Friend_sel }}</span>
+                </div>
+                <div class="container rounded-4 div-grey p-2" id="message_input" style="display: none;">
+					
+				</div>
+            </div>
+            <div class="col-1 d-block d-md-none px-0">
+				<button class="btn p-0 mx-3" id="Openfriends_menu">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-left" viewBox="3 2 12 12">
+                        <path d="M10 12.796V3.204L4.519 8zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="col-md-4 container-fluid rounded-end-4 px-0 py-1 mx-0" id="friends_menu">
+				<div class="d-flex align-items-center justify-content-between">
+					<button class="btn d-block d-md-none p-0 mb-3 ms-2" id="Closefriends_menu">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-right" viewBox="3 2 12 12">
+                            <path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
+                        </svg>
+                    </button>
+                    <button class="btn btn-info mx-2 mb-2 rounded-5 flex-grow-1" type="button" data-bs-toggle="dropdown" aria-expanded="false"><span class="fs-5">{{ texts.Friend_add }}</span></button>
+                    <form class="dropdown-menu p-2 log_form rounded-5" id="dropdown_AddFriend">
+						{% csrf_token %}
+                        <div class="d-flex align-content-center">
+							<input type="name" class="form-control rounded-5 mx-1" id="AddFriend_input" name="name" placeholder="Friend" required>
+                            <button type="submit" class="btn btn-info rounded-5 mx-1">{{ texts.Send_btn }}</button>
+                        </div>
+                    </form>
+                </div>
+                <div id="friend-list">
+					
+                </div>
+            </div>
+        </div>
+    </template>
+	
+    <template id="temp_friend">
+		<button class="btn my-2 py-2 ps-1 pe-0 rounded-start-0 rounded-end-5 d-flex align-items-center justify-content-between friend_btn">
+            <span class="text-break flex-grow-1" id="friend_username"></span><img class="ms-2 rounded-circle" src="" alt="Avatar" width="50" height="50">
+        </button>
+    </template>
+    <template id="temp_no_friend">
+        <span class="text-center fs-2 fw-bolder txt-grey">{{ texts.Friend_sel }}</span>
+    </template>
+    <template id="temp_send_message">
+		<div class="d-flex align-content-center">
+			<form class="d-flex align-content-center flex-grow-1" id="chat-message-form">
+                {% csrf_token %}
+                <input type="text" class="form-control rounded-4 me-1" id="chat-message-input" name="message" placeholder=" {{ texts.Friend_message }}" autocomplete="off" required>
+                <button class="btn btn-info rounded-circle me-1" type="submit" title="{{ texts.Friend_send }}" id="chat-message-submit">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                        <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                    </svg>
+                </button>
+            </form>
+			<button class="btn btn-info rounded-circle me-1" title="Friend profile" id="friendProfile">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+					<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+				</svg>
+            </button>
+			<button class="btn btn-primary" title="Invite to play" id="inviteBtn">{{ texts.Invite_play_btn }}</button>
+        </div>
+    </template>
+    <template id="temp_Friend_Request">
+        <div class="d-flex justify-content-center mb-1"><span class="txt-blue text-center fs-4">{{ texts.Friend_request }}</span></div>
+        <div class="row d-flex align-items-center">
+			<button class="col btn btn-success btn-sm ms-3 me-1 rounded-4" id="accept_friend">{{ texts.Accept }}</button>
+            <button class="col btn btn-danger btn-sm ms-1 me-3 rounded-4" id="refuse_friend">{{ texts.Refuse }}</button>
+        </div>
+    </template>
+    <template id="temp_wait_Friend_Request">
+        <div class="d-flex justify-content-center mb-1"><span class="txt-blue text-center fs-4">{{ texts.Friend_pending }}</span></div>
+    </template>
+
+    <template id="Game">
+		<div class="row d-flex align-content-start flex-column" id="game-container">
+			<div class="align-items-center" id="game-header">
+				<div id="LeftPlayer" class="col">
+					<span id="LeftPlayerName">...</span>
+					<span id="LeftPlayerScore">0</span>
+					<img src="icons/DefaultIcon.png" alt="LeftUserIcon" id="leftUserIcon">
+				</div>
+				<div class="col"></div>
+				<div id="RightPlayer" class="col">
+					<span id="RightPlayerName">...</span>
+					<span id="RightPlayerScore">0</span>
+					<img src="icons/DefaultIcon.png" alt="RightUserIcon" id="rightUserIcon">
+				</div>
+			</div>
+			<div class="flex-grow-1" id="game-area">
+				<div id="ball"></div>
+				<div id="left-paddle"></div>
+				<div id="right-paddle"></div>
+				<div id="delimiter"></div>
+				<button id="ready">{{ texts.Ready }}</button>
+				<p id="counter">3</p>
+				<div class="zone" id="zone-left-up"></div>
+				<div class="zone" id="zone-left-down"></div>
+				<div class="zone" id="zone-right-up"></div>
+				<div class="zone" id="zone-right-down"></div>
+			</div>
+
+			<div class="p-2 border-3" id="main-menu">
+				<button id="AIButton">{{ texts.PlayerVsAI }}</button>
+				<button id="HostGame1v1Button">{{ texts.PlayerVsPlayer }}</button>
+				<button id="HostGame2v2Button">{{ texts.GameTeams }}</button>
+				<button id="HostTournamentButton">{{ texts.Tournament }}</button>
+			</div>
+			
+			<div id="AIMenu">
+				<button id="AIEasyButton">{{ texts.AIEasyDifficulty }}</button>
+				<button id="AIMediumButton">{{ texts.AIMediumDifficulty }}</button>
+				<button id="AIHardButton">{{ texts.AIHardDifficulty }}</button>
+			</div>
+			
+			<div id="Room" style="display: none">
+				<div id="UsersInformation">
+					<div id="Host">
+						<p id="HostName">Host</p>
+						<img src="icons/DefaultIcon.png" alt="HostUserIcon" id="hostUserIcon">
+					</div>
+					<div id="User1">
+						<p id="User1Name">...</p>
+						<img src="icons/DefaultIcon.png" alt="User1Icon" id="user1Icon">
+						<input id="User1SearchBox" type="SearchBox">
+						<button id="User1Search">{{ texts.GameUserSearch }}</button>
+					</div>
+					<div id="User2">
+						<p id="User2Name">...</p>
+						<img src="icons/DefaultIcon.png" alt="User2Icon" id="user2Icon">
+						<input id="User2SearchBox" type="SearchBox">
+						<button id="User2Search">{{ texts.GameUserSearch }}</button>
+					</div>
+					<div id="User3">
+						<p id="User3Name">...</p>
+						<img src="icons/DefaultIcon.png" alt="User3Icon" id="user3Icon">
+						<input id="User3SearchBox" type="SearchBox">
+						<button id="User3Search">{{ texts.GameUserSearch }}</button>
+					</div>
+					<div id="waitingPlayer" style="display: none;">
+						<img src="{% static 'anim/Waiting.gif' %}" alt="waiting gif">
+					</div>
+				</div>
+				<button id="launchMatchMaking">{{ texts.Matchmaking_btn }}</button>
+				<button id="StartGame">{{ texts.StartGame }}</button>
+			</div> 
+			
+			<div id="EndGameMenu">
+				<p id="Winner">{{ texts.Winner }}</p>
+				<img src="icons/DefaultIcon.png" alt="WinnerIcon" id="WinnerIcon">
+				<p id="WinnerName">username</p>
+				<p id="Draw">{{ texts.GameDraw }}</p>
+				<button id="PlayAgain">{{ texts.PlayAgain }}</button>
+				<button id="NextButton">{{ texts.NextButton }}</button>
+			</div>
+		</div>
+		<div class="row align-content-end justify-content-end" id="MenuButton">
+			<button id="BackMainMenuButton">{{ texts.MainMenu }}</button>
+			<button class="btn p-0 mx-3" id="darkModeSwitch"><img class="rounded-circle" src="{% static 'img/darkmodeicon.png' %}"/></button>
+		</div>
+		
+		</template>
+	
+	<template id="temp_change_avatar">
+		<div class="py-2 px-3 my-4" id="change_avatar">
+			<h1 class="text-center fw-bold">{{ texts.Change_avatar1 }}</h1>
+			<form method="post" id="change-avatar-form">
+				<div id="avatar-container" class="d-flex flex-wrap gap-2"></div>
+                <div class="text-center mt-3">   
+					<button type="button" class="btn btn-primary" id="ChangeAvatar_btn">{{ texts.Save }}</button>
+                </div>
+			</form>
+		</div>
+	</template>
+
+    <template id="temp_change_password">
+		<div class="py-2 my-3" id="change_password">
+			<h1 class="text-center fw-bold">{{ texts.Change_Passwd_1 }}</h1>
+			<form class="mx-1" method="post" id="change-password-form">
+				{% csrf_token %}
+				<div class="form-group my-2">
+					<label for="oldPassword">{{ texts.Change_Passwd_2 }}</label>
+					<input type="password" id="oldPassword" name="oldPassword" class="form-control" required>
+				</div>
+				<div class="form-group my-2">
+					<label for="newPassword">{{ texts.Change_Passwd_3 }}</label>
+					<input type="password" id="newPassword" name="newPassword" class="form-control" required>
+				</div>
+				<div class="form-group my-2">
+					<label for="confirmPassword">{{ texts.Change_Passwd_4 }}</label>
+					<input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+				</div>
+				<div class="text-center m-2">
+					<button type="submit" class="btn btn-primary">{{ texts.Change_Passwd_5 }}</button>
+				</div>
+				<div id="err_change_pwd">
+					<ul>
+						<!-- error dynamique -->
+					</ul>
+				</div>
+			</form>
+		</div>
+	</template>
+	
+    <!-- Template friend_profile -->
+	<template id="temp_friend_profile">
+		<div class="d-flex align-items-center justify-content-between">
+			<div class="d-flex align-items-center">
+				<img class="ms-2 rounded-circle" id="img_friend_avatar" src="" alt="Avatar" width="50" height="50">
+				<span class="text-break flex-grow-1" id="span_friend_username"></span>
+			</div>
+			<div>
+				<button class="btn btn-outline-danger" title="Delete your friend" data-bs-toggle="modal" data-bs-target="#ConfirmDeleteModal">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heartbreak-fill" viewBox="0 0 16 16">
+	                    <path d="M8.931.586 7 3l1.5 4-2 3L8 15C22.534 5.396 13.757-2.21 8.931.586M7.358.77 5.5 3 7 7l-1.5 3 1.815 4.537C-6.533 4.96 2.685-2.467 7.358.77"/>
+	                </svg>
+					{{ texts.Delete_btn }}
+	            </button>
+				<button class="btn btn-outline-danger" title="Block your friend" id="blockFriend" data-bs-target="#ConfirmBlockModal" style="display: inline;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sign-stop" viewBox="0 0 16 16">
+						<path d="M3.16 10.08c-.931 0-1.447-.493-1.494-1.132h.653c.065.346.396.583.891.583.524 0 .83-.246.83-.62 0-.303-.203-.467-.637-.572l-.656-.164c-.61-.147-.978-.51-.978-1.078 0-.706.597-1.184 1.444-1.184.853 0 1.386.475 1.436 1.087h-.645c-.064-.32-.352-.542-.797-.542-.472 0-.77.246-.77.6 0 .261.196.437.553.522l.654.161c.673.164 1.06.487 1.06 1.11 0 .736-.574 1.228-1.544 1.228Zm3.427-3.51V10h-.665V6.57H4.753V6h3.006v.568H6.587Z"/>
+						<path fill-rule="evenodd" d="M11.045 7.73v.544c0 1.131-.636 1.805-1.661 1.805-1.026 0-1.664-.674-1.664-1.805V7.73c0-1.136.638-1.807 1.664-1.807s1.66.674 1.66 1.807Zm-.674.547v-.553c0-.827-.422-1.234-.987-1.234-.572 0-.99.407-.99 1.234v.553c0 .83.418 1.237.99 1.237.565 0 .987-.408.987-1.237m1.15-2.276h1.535c.82 0 1.316.55 1.316 1.292 0 .747-.501 1.289-1.321 1.289h-.865V10h-.665zm1.436 2.036c.463 0 .735-.272.735-.744s-.272-.741-.735-.741h-.774v1.485z"/>
+						<path fill-rule="evenodd" d="M4.893 0a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146A.5.5 0 0 0 11.107 0zM1 5.1 5.1 1h5.8L15 5.1v5.8L10.9 15H5.1L1 10.9z"/>
+					</svg>
+					{{ texts.Block_btn }}
+				</button>
+				<button class="btn btn-primary" title="Deblock your friend" id="deblockFriend" style="display: inline;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sign-stop" viewBox="0 0 16 16">
+						<path d="M3.16 10.08c-.931 0-1.447-.493-1.494-1.132h.653c.065.346.396.583.891.583.524 0 .83-.246.83-.62 0-.303-.203-.467-.637-.572l-.656-.164c-.61-.147-.978-.51-.978-1.078 0-.706.597-1.184 1.444-1.184.853 0 1.386.475 1.436 1.087h-.645c-.064-.32-.352-.542-.797-.542-.472 0-.77.246-.77.6 0 .261.196.437.553.522l.654.161c.673.164 1.06.487 1.06 1.11 0 .736-.574 1.228-1.544 1.228Zm3.427-3.51V10h-.665V6.57H4.753V6h3.006v.568H6.587Z"/>
+						<path fill-rule="evenodd" d="M11.045 7.73v.544c0 1.131-.636 1.805-1.661 1.805-1.026 0-1.664-.674-1.664-1.805V7.73c0-1.136.638-1.807 1.664-1.807s1.66.674 1.66 1.807Zm-.674.547v-.553c0-.827-.422-1.234-.987-1.234-.572 0-.99.407-.99 1.234v.553c0 .83.418 1.237.99 1.237.565 0 .987-.408.987-1.237m1.15-2.276h1.535c.82 0 1.316.55 1.316 1.292 0 .747-.501 1.289-1.321 1.289h-.865V10h-.665zm1.436 2.036c.463 0 .735-.272.735-.744s-.272-.741-.735-.741h-.774v1.485z"/>
+						<path fill-rule="evenodd" d="M4.893 0a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146A.5.5 0 0 0 11.107 0zM1 5.1 5.1 1h5.8L15 5.1v5.8L10.9 15H5.1L1 10.9z"/>
+					</svg>
+					{{ texts.Unblock_btn }}
+				</button>
+			</div>
+		</div>
+	</div>
+	</template>
+
+	<!-- Template des stats -->
+    <template id="temp_stats">
+		<div class="row d-flex align-items-center"><span class="txt-blue fs-1 text-center py-1">{{ texts.Stat }}</span></div>
+        <div class="row d-flex align-items-center">
+			<span class="col txt-blue fs-2 text-center py-1">{{ texts.Stat_game }}</span>
+            <span class="col txt-blue fs-2 text-center py-1">{{ texts.Stat_tournaments }}</span>
+        </div>
+        <div class="row d-flex align-items-center">
+			<div class="col p-2 d-flex align-items-center">
+				<div class="col"><canvas class="Diagram" id="Diag_games"></canvas></div>
+                <div class="col txt-blue fs-2 mx-2" style="width: max-content;">
+					<div><span>{{ texts.Stat_win1 }}</span><span id="Win_game"></span></div>
+                    <div><span>{{ texts.Stat_lose1 }}</span><span id="Lose_game"></span></div>
+                </div>
+            </div>
+            <div class="vr mx-2 rounded-5 p-2 d-none d-md-block" style="height: 200px; align-self: center;"></div>
+            <div class="col p-2 d-flex align-items-center">
+				<div class="col txt-blue fs-2 mx-2 text-end ms-auto" style="width: max-content;">
+					<div><span id="Win_tournament"></span><span>{{ texts.Stat_win2 }}</span></div>
+                    <div><span id="Lose_tournament"></span><span>{{ texts.Stat_lose2 }}</span></div>
+                </div>
+                <div class="col"><canvas class="Diagram" id="Diag_tournament"></canvas></div>
+            </div>
+        </div>
+        <div class="row d-flex align-items-center px-3">
+			<span class="txt-blue fs-2 text-center py-1">{{ texts.Stat_history }}</span>
+            <table class="table table-striped">
+				<thead>
+					<tr>
+						<th scope="col">{{ texts.Stat_date }}</th>
+						<th scope="col">{{ texts.Stat_opponent }}</th>
+						<th scope="col">{{ texts.Stat_score }}</th>
+						<th scope="col">{{ texts.Stat_result }}</th>
+                    </tr>
+                </thead>
+                <tbody id="table_history"></tbody>
+            </table>
+            <span id="no_data_txt" class="txt-blue fs-4 text-center pb-2" style="display: none;">No Data</span>
+        </div>
+	</template>
+	
+    <template id="temp_notFound">
+		<img src="{% static 'anim/404_err.gif' %}" alt="Err_404 gif" class="img-fluid d-block mx-auto rounded-5 img-border"/>
+        <h1 class="text-center fw-bolder">{{ texts.404_Err }}</h1>
+    </template>
+
+	<!-- Modal pour info temporaire -->
+	<div class="modal" id="successModal" tabindex="-1" aria-labelledby="examplesuccessModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="infoco"><!--script dynamique--></h5>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal pour confirmer la supression de son compte -->
+	<div class="modal" id="ConfirmDeleteAccount" tabindex="-1" aria-labelledby="exampleConfirmDeleteModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{{ texts.Warning_title }} !</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<span>{{ texts.Delete_account_mess }}</span>
+					<span>{{ texts.Sure_question }}</span>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ texts.No_answer }}</button>
+					<button type="button" class="btn btn-success" data-bs-dismiss="modal" id="delete_account">{{ texts.Yes_answer }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal pour confirmer la supression de l'ami -->
+    <div class="modal" id="ConfirmDeleteModal" tabindex="-1" aria-labelledby="exampleConfirmDeleteModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{{ texts.Warning_title }} !</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+                <div class="modal-body">
+                    <span>{{ texts.Delete_friend_mess }}</span>
+                    <span>{{ texts.Sure_question }}</span>
+                </div>
+                <div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ texts.No_answer }}</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="delete_friend">{{ texts.Yes_answer }}</button>
+                </div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal pour corfirmer le blocage du user -->
+	<div class="modal" id="ConfirmBlockModal" tabindex="-1" aria-labelledby="exampleConfirmBlockModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{{ texts.Warning_title }} !</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+                <div class="modal-body">
+					<span>{{ texts.Block_friend_mess }} !</span>
+                    <span>{{ texts.Sure_question }}</span>
+                </div>
+                <div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">{{ texts.No_answer }}</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="block_friend">{{ texts.Yes_answer }}</button>
+                </div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal pour Notifications-->
+	<div class="modal" id="notifModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">{{ texts.Notifs_btn }}</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="lst_notif">
+					<ul class="list-group list-group-flush">
+						<!-- contenue dynamique -->
+					</ul>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ texts.Close_btn }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal d'invitation a jouer -->
+	<div class="modal" id="inviteModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">{{ texts.Invitation_title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+                <div class="modal-body">
+                    <span id="inviteSender"></span><span>{{ texts.Invite_mess }}</span>
+                    <span>{{ texts.Join_question }}</span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="inviteRefuse">{{ texts.No_answer }}</button>
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="inviteAccepte">{{ texts.Yes_answer }}</button>
+                </div>
+			</div>
+		</div>
+	</div>
+
+	<!-- options when client is connected -->
+	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+		<div class="offcanvas-header">
+			<h1 class="offcanvas-title" id="offcanvasRightLabel">{{ texts.Options }}</h1>
+			<button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		</div>
+		<div class="offcanvas-body">
+			<a class="btn btn-outline-light mt-2 w-100 rounded-5" id="change_avatar_btn" href="/change-avatar/" data-bs-dismiss="offcanvas" data-link>{{ texts.Change_avatar2 }}</a>
+        	<a class="btn btn-outline-light mt-2 w-100 rounded-5" id="change_password_btn" href="/change-password/" data-bs-dismiss="offcanvas" data-link>{{ texts.Change_Passwd_5 }}</a>
+			<button class="btn btn-outline-light mt-2 w-100 rounded-5" id="logout_btn" type="button" data-bs-dismiss="offcanvas">{{ texts.Log_out }}</button>
+			<button id="deleteAccountBtn" class="btn btn-outline-light mt-2 w-100 rounded-5" title="Delete your account" data-bs-toggle="modal" data-bs-target="#ConfirmDeleteAccount" data-bs-dismiss="offcanvas">{{ texts.Del_account }}</button>
+		</div>
+	</div>
+    <script type="module" defer src="{% static 'js/main.js' %}"></script>
+	<script type="module" defer src="{% static 'js/pong.js' %}"></script>
+    <script type="module" defer src="{% static 'js/utils.js' %}"></script>
+</body>
+</html>

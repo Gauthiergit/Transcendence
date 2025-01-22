@@ -1,0 +1,427 @@
+/*////////////////////////////////////////////////////////////
+ //                   Containers Elements                  //
+////////////////////////////////////////////////////////////*/
+
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --border-color: #000000;
+    /* --primary-color: #007bff; */
+    /* --secondary-color: #6c757d; */
+  }
+  
+  /* Dark mode colors */
+  .dark-mode {
+    --background-color: #121212;
+    --text-color: #ffffff;
+    --border-color: #ffffff;
+    /* --primary-color: #1a73e8;
+    --secondary-color: #9e9e9e; */
+  }
+  
+#game-container * {
+    transition: background-color 0.3s, color 0.3s, border-color, 0.3s;
+}
+
+#game-container {
+    min-width: 370px;
+}
+
+#game-header {
+    padding: 0;
+    display: flex;
+}
+
+#game-container {
+    height: 75vh;
+}
+
+#game-area {
+	background-color: var(--background-color);
+	position: relative;
+	border: solid 3px var(--border-color);
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	z-index: 0;
+}
+
+/* /////////////////////////////////////////////////////////////////////////// */
+/* /////////////////////////////////// tactile /////////////////////////////// */
+/* /////////////////////////////////////////////////////////////////////////// */
+
+.zone {
+    position: absolute;
+    /* background: rgba(255, 0, 0, 0.379); */
+    touch-action: none;
+    z-index: 20000;
+    cursor: pointer;
+}
+
+#zone-left-up {
+    top: 0;
+    left: 0;
+    width: 25%;
+    height: 50%;
+}
+
+#zone-left-down {
+    bottom: 0;
+    left: 0;
+    width: 25%;
+    height: 50%;
+    /* background: rgba(0, 0, 255, 0.379); */
+}
+
+#zone-right-up {
+    top: 0;
+    right: 0;
+    width: 25%;
+    height: 50%;
+}
+
+#zone-right-down {
+    bottom: 0;
+    right: 0;
+    width: 25%;
+    height: 50%;
+    /* background: rgba(0, 0, 255, 0.379); */
+}
+
+/* /////////////////////////////////////////////////////////////////////////// */
+/* ////////////////////////^^^^/////// tactile ////////////////^^^^^////////// */
+/* /////////////////////////////////////////////////////////////////////////// */
+
+/*////////////////////////////////////////////////////////////
+ //                   LeftPlayer Elements                  //
+////////////////////////////////////////////////////////////*/
+
+#LeftPlayer {
+    color: var(--text-color);
+	top: 8px;
+    position: relative;
+    height: 120px;
+    max-width: 210px;
+    min-width: 185px;
+    background-color: var(--background-color);
+    border: solid 3px var(--border-color);
+    transform: translate(0px, -8px);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#LeftPlayerName {
+	position: absolute;
+	top : 85px;
+	left: 9px;
+	width: 90px;
+	text-align: center;
+	border : solid 1px var(--border-color);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#LeftPlayerScore {
+	margin: 10;
+	position: absolute;
+	top: 50px;
+	right: 45px;
+	transform: translate(50%, -50%);
+	text-align: center;
+    font-size: 100px;
+}
+
+#leftUserIcon {
+    border-radius: 10px;
+	position: absolute;
+	width: 80px;
+	height: 80px;
+	left: 15px;
+	top :6px;
+    border-radius: 50%;
+    border : solid 1px var(--border-color);
+
+}
+
+/*////////////////////////////////////////////////////////////
+ //                   RightPlayer Elements                 //
+////////////////////////////////////////////////////////////*/
+
+#RightPlayer {
+    color: var(--text-color);
+	top: 8px;
+    position: relative;
+    height: 120px;
+    max-width: 210px;
+    min-width: 185px;
+    background-color: var(--background-color);
+    border: solid 3px var(--border-color);
+    transform: translate(0px, -8px);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+
+#RightPlayerName {
+	position: absolute;
+    top: 85px;
+    right: 9px;
+    width: 90px;
+    text-align: center;
+    border : solid 1px var(--border-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	z-index: 1;
+}
+
+#RightPlayerScore {
+	margin: 10;
+	position: absolute;
+	top: 50px;
+	left: 45px;
+	transform: translate(-50%, -50%);
+	text-align: center;
+    font-size: 100px;
+}
+
+#rightUserIcon {
+    border-radius: 10px;
+	position: absolute;
+    width: 80px;
+    height: 80px;
+    right: 15px;
+    top :6px;
+    border-radius: 50%;
+    border : solid 1px var(--border-color);
+}
+
+/*////////////////////////////////////////////////////////////
+//                         Elements                       //
+////////////////////////////////////////////////////////////*/
+
+#left-paddle, #right-paddle {
+	top: 50%;
+	position: absolute;
+	background-color: var(--border-color);
+	height: 150px;
+	width: 15px;
+	border-radius: 50px;
+	transform: translateY(-50%);
+	transition: 0.06s linear;
+}
+
+#left-paddle {
+	left: 5px;
+}
+
+#right-paddle {
+	right: 5px;
+}
+
+#ball {
+	height: 20px;
+	width: 20px;
+	background-color: var(--border-color);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	z-index: 1;
+    transition: none;
+}
+
+#delimiter {
+    height: 99%;
+    top: 0;
+    left: 50%;
+	border: 2px dashed var(--border-color);
+	transform: translateX(-50%);
+	position: absolute;
+	z-index: 0;
+}
+
+#GameTypeHeader {
+    font-size: 52px;
+    position: absolute;
+    display: flex;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--background-color);
+    border: solid 3px var(--border-color);
+    border-radius: 10px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-color);
+}
+
+#tips1, #tips2 {
+	color: var(--text-color);
+    width: 400px;
+	/* border: solid 3px white; */
+    position: absolute;
+    font-size: 35px;
+    left: -190px;
+    transform: translate(50%, -50%);
+}
+
+#tips1 {
+    bottom: -18px;
+}
+
+#tips2 {
+    bottom: -60px;
+}
+
+#DarkModeText {
+	color: var(--text-color);
+	position: absolute;
+	font-size: 25px;
+	left: 80px;
+	width: 200px;
+	height: 30px;
+	top: -10px;
+	/* justify-content: center; */
+	/* border: solid 3px white; */
+	text-align: center;
+	transform: translate(-50%, -50%);
+	bottom: -70px;
+}
+
+/*////////////////////////////////////////////////////////////
+ //                        Users info                      //
+////////////////////////////////////////////////////////////*/
+
+#UsersInformation {
+    display: flex;
+    flex-direction: row;
+    background-color: transparent;
+    width: 100%;
+    height: 200px;
+	margin-bottom: 40px;
+    /* position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; */
+    align-items: center;
+    justify-content: center;
+}
+#Host, #User1, #User2, #User3 {
+    display: flex;
+    flex-direction: column;
+    /* background-color: transparent; */
+    width: 150px;
+    height: 150px;
+    position: relative;
+    border-radius: 40px;
+    border : solid 3px var(--border-color);
+    background-color: var(--background-color);
+    z-index: 1;
+}
+#User1SearchBox, #User2SearchBox, #User3SearchBox {
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    border-radius: 10px;
+    bottom: -40px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#hostUserIcon, #user1Icon, #user2Icon, #user3Icon {
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    border : solid 1px var(--border-color);
+}
+#HostName, #User1Name, #User2Name, #User3Name {
+    position: absolute;
+    color: white;
+    text-align: center;
+    bottom: 10px;
+    width: 100px;
+    border-radius: 10px;
+    background-color: rgba(128, 128, 128, 0.8);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border : solid 1px white;
+    z-index: 2;
+}
+
+#Winner {
+    color: var(--text-color);
+    position: absolute;
+    font-size: 50px;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+#WinnerIcon {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    right: 50%;
+    top: 35%;
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+    border : solid 1px var(--text-color);
+}
+
+#WinnerName, #Draw{
+    position: absolute;
+    color: var(--text-color);
+    font-size: 50px;
+    text-align: center;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* #EndGameLeftPlayer {
+    color: white;
+    position: absolute;
+    margin: 15px;
+} */
+
+#counter {
+	position: absolute;
+	/* top: 140px; */
+	top: 50%;
+	width: 140px;
+	border-radius: 50%;
+	background-color: var(--background-color);
+	/* height: 100px; */
+	text-align: center;
+	border: solid 3px var(--border-color);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 120px;
+	z-index: 3;
+	color: red;
+}
+
+#datest {
+    display: flex;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    height: 80%;
+    width: 80%;
+    z-index: 3000;
+	border: solid 5px yellow;
+    background-color: rgba(0, 0, blue, 0.5);
+
+	overflow: hidden;
+}
