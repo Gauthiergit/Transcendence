@@ -12,7 +12,9 @@ mkdir database
 
 3. This version use auto-signed certificat
 
-4. You can execute the docker
+4. You need to fill variables in .env. Concerning the 2FA, we use gmail account so you must put an existing gmail in EMAIL_HOST_USER. Next you need to generate a secret key from this mail and put it in EMAIL_HOST_PASSWORD.
+
+5. You can execute the docker
 ````sh
 make
 ````
